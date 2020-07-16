@@ -11,7 +11,6 @@ using HasznaltAuto.Handlers;
 
 namespace HasznaltAuto
 {
-    //PAGINATION NEEDED
     class Program
     {
         static void Main(string[] args)
@@ -41,6 +40,9 @@ namespace HasznaltAuto
             cookieOK.Click();
             #endregion
 
+            Thread.Sleep(100);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+
             #region Main page, select a car brand
             IWebElement carBrand = driver.FindElement(By.Id("hirdetesszemelyautosearch-marka_id"));
             SelectElement carBrandSelector = new SelectElement(carBrand);
@@ -50,7 +52,9 @@ namespace HasznaltAuto
             #region Going through each brand 1 by 1
             for (int i = 1; i < 7; i++) //numberOfCarBrands
             {
-                Thread.Sleep(500);
+                Thread.Sleep(100);
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+
                 IWebElement carBrandNOTstale = driver.FindElement(By.Id("hirdetesszemelyautosearch-marka_id"));
                 SelectElement carBrandSelectorNOTstale = new SelectElement(carBrandNOTstale);
                 carBrandSelectorNOTstale.SelectByIndex(i);
@@ -62,11 +66,20 @@ namespace HasznaltAuto
 
                 for (int l = 1; l < numberOfCarTypes; l++)
                 {
-                    Thread.Sleep(500);
+                    if (l%2==0)
+                    {
+                        Thread.Sleep(250);
+                    }
+                    else
+                    {
+                        Thread.Sleep(100);
+                    }
 
                     IWebElement carBrandNOTstaleagain = driver.FindElement(By.Id("hirdetesszemelyautosearch-marka_id"));
                     SelectElement carBrandSelectorNOTstaleagain = new SelectElement(carBrandNOTstaleagain);
                     carBrandSelectorNOTstaleagain.SelectByIndex(i);
+                    driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+                    Thread.Sleep(1000);
 
                     IWebElement carTypeNOTstale = driver.FindElement(By.Id("hirdetesszemelyautosearch-modell_id"));
                     SelectElement carTypeSelectorNOTstale = new SelectElement(carTypeNOTstale);
@@ -82,7 +95,7 @@ namespace HasznaltAuto
                     int k = 0;
                     do
                     {
-                        Thread.Sleep(500);
+                        Thread.Sleep(100);
 
                         ReadOnlyCollection<IWebElement> listOfCarsInOnePage = driver.FindElements(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener"));
                         int numberOfCarsInOnePage = listOfCarsInOnePage.Count;
@@ -94,9 +107,10 @@ namespace HasznaltAuto
                         }
 
                         #region Car page
-                        for (int j = 1; j < numberOfCarsInOnePage - 1; j++)
+                        for (int j = 0; j < numberOfCarsInOnePage; j++)
                         {
-                            Thread.Sleep(500);
+                            Thread.Sleep(250);
+                            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
                             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
                             ReadOnlyCollection<IWebElement> listOfCarsInOnePageNOTstale = driver.FindElements(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener"));
@@ -106,8 +120,17 @@ namespace HasznaltAuto
                             var carCardLink = onecarFromList.FindElement(By.LinkText(linkText));
                             carCardLink.Click();
                             #region Instantiating HasznaltAuto
+                            HasznaltautoAdapter hasznaltautoAdapter = new HasznaltautoAdapter(driver.Url, autoGyarto, autoTipus);
 
-                            hh.GetRawCarData(driver.Url, autoGyarto ,autoTipus);
+                            try
+                            {
+                                Hasznaltauto hasznaltAuto = hasznaltautoAdapter.CreateHasznaltauto();
+                                hh.SetHasznaltautoWithCheckErrors(hasznaltAuto);
+                            }
+                            catch (ArgumentException ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
 
                             #endregion
 
@@ -130,24 +153,6 @@ namespace HasznaltAuto
                 }
             }
             #endregion
-
-            //Crawler crawler = new Crawler("https://www.hasznaltauto.hu/");
-            //crawler.AutoGyarto = crawler.Driver.FindElement(By.Id("hirdetesszemelyautosearch-marka_id"));
-            //for (int i = 1; i < crawler.AutoGyartoSelector.Options.Count; i++)
-            //{
-
-            //    crawler.AutoGyartoSelector.SelectByIndex(i);
-            //    crawler.AutoTipus = crawler.Driver.FindElement(By.Id("hirdetesszemelyautosearch-modell_id"));
-
-            //    for (int j = 1; j < crawler.AutoTipusSelector.Options.Count; j++)
-            //    {
-            //        crawler.AutoTipus = crawler.Driver.FindElement(By.Id("hirdetesszemelyautosearch-modell_id"));
-            //        crawler.AutoTipusSelector.SelectByIndex(j);
-            //        crawler.BtnKereses.Click();
-
-            //        crawler.Driver.Navigate().Back();
-
-            //    }
         }
 
     }

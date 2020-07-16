@@ -37,11 +37,12 @@ namespace HasznaltAuto.Models
         public string AbroncsMeret { get; set; }
         public string Link { get; set; }
         public string  Leiras { get; set; }
+        public bool IsKereskedo { get; set; }
 
         public Hasznaltauto(int id, string autoGyarto, string autoTipus,  string hirdetesKod, int vetelarHUF, int vetelarEUR, int evjaratEv, int evjaratHonap, string allapot, string kivitel,
             int kmAllas, int szemelyekSzama, int ajtokSzama, string szin, int tomeg, int teljesTomeg, int csomagtartoMeret, string klimaFajta, string uzemanyag,
             int hengerurtartalom, int teljesitmenyKW, int teljesitmenyLE, string hajtas, string sebessegvalto, string okmanyok, int muszakivizsgaEv,
-            int muszakivizsgaHonap, string abroncsMeret, string link, string leiras)
+            int muszakivizsgaHonap, string abroncsMeret, string link, string leiras, bool isKereskedo)
         {
             Id = id;
             AutoGyarto = autoGyarto;
@@ -73,12 +74,13 @@ namespace HasznaltAuto.Models
             AbroncsMeret = abroncsMeret;
             Link = link;
             Leiras = leiras;
+            IsKereskedo = isKereskedo;
         }
 
         public Hasznaltauto(string autoGyarto, string autoTipus, string hirdetesKod,  int vetelarHUF, int vetelarEUR, int evjaratEv, int evjaratHonap, string allapot, string kivitel,
             int kmAllas, int szemelyekSzama, int ajtokSzama, string szin, int tomeg, int teljesTomeg, int csomagtartoMeret, string klimaFajta, string uzemanyag,
             int hengerurtartalom, int teljesitmenyKW, int teljesitmenyLE, string hajtas, string sebessegvalto, string okmanyok, int muszakivizsgaEv,
-            int muszakivizsgaHonap, string abroncsMeret, string link, string leiras)
+            int muszakivizsgaHonap, string abroncsMeret, string link, string leiras, bool isKereskedo)
         {
             AutoGyarto = autoGyarto;
             AutoTipus = autoTipus;
@@ -109,6 +111,7 @@ namespace HasznaltAuto.Models
             AbroncsMeret = abroncsMeret;
             Link = link;
             Leiras = leiras;
+            IsKereskedo = isKereskedo;
         }
     }
 }

@@ -38,19 +38,20 @@ namespace HasznaltAuto.Handlers
 
         protected void SetHasznaltauto(Hasznaltauto hasznaltAuto)
         {
-            string sql = "INSERT INTO hasznaltautok(AutoGyarto, AutoTipus, HirdetesKod, VetelarHUF, VetelarEUR, EvjaratEv, EvjaratHonap, Allapot, Kivitel, " +
+            string sql = "INSERT INTO hasznaltauto(AutoGyarto, AutoTipus, Hirdeteskod, VetelarHUF, VetelarEUR, EvjaratEv, EvjaratHonap, Allapot, Kivitel, " +
                 "KmAllas, SzemelyekSzama, AjtokSzama, Szin, Tomeg, TeljesTomeg, CsomagtartoMeret, KlimaFajta, Uzemanyag, " +
                 "Hengerurtartalom, TeljesitmenyKW, TeljesitmenyLE, Hajtas, Sebessegvalto, Okmanyok, MuszakivizsgaEv, " +
-                "muszakivizsgaHonap, AbroncsMeret, Link) " +
+                "muszakivizsgaHonap, AbroncsMeret, Link, Leiras, IsKereskedo) " +
                 "VALUES(@AutoGyarto, @AutoTipus, @HirdetesKod, @VetelarHUF, @VetelarEUR, @EvjaratEv, @EvjaratHonap, @Allapot, @Kivitel, " +
                 "@KmAllas, @SzemelyekSzama, @AjtokSzama, @Szin, @Tomeg, @TeljesTomeg, @CsomagtartoMeret, @KlimaFajta, @Uzemanyag, " +
                 "@Hengerurtartalom, @TeljesitmenyKW, @TeljesitmenyLE, @Hajtas, @Sebessegvalto, @Okmanyok, @MuszakivizsgaEv, " +
-                "@MuszakivizsgaHonap, @AbroncsMeret, @Link)";
+                "@MuszakivizsgaHonap, @AbroncsMeret, @Link, @Leiras, @IsKereskedo)";
 
             using(MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@AutoGyarto", hasznaltAuto.AutoGyarto);
                 cmd.Parameters.AddWithValue("@AutoTipus", hasznaltAuto.AutoTipus);
+                cmd.Parameters.AddWithValue("@Hirdeteskod", hasznaltAuto.Hirdeteskod);
                 cmd.Parameters.AddWithValue("@VetelarHUF", hasznaltAuto.VetelarHUF);
                 cmd.Parameters.AddWithValue("@VetelarEUR", hasznaltAuto.VetelarEUR);
                 cmd.Parameters.AddWithValue("@EvjaratEv", hasznaltAuto.EvjaratEv);
@@ -76,6 +77,8 @@ namespace HasznaltAuto.Handlers
                 cmd.Parameters.AddWithValue("@MuszakivizsgaHonap", hasznaltAuto.MuszakiVizsgaHonap);
                 cmd.Parameters.AddWithValue("@AbroncsMeret", hasznaltAuto.AbroncsMeret);
                 cmd.Parameters.AddWithValue("@Link", hasznaltAuto.Link);
+                cmd.Parameters.AddWithValue("@Leiras", hasznaltAuto.Leiras);
+                cmd.Parameters.AddWithValue("@IsKereskedo", hasznaltAuto.IsKereskedo);
                 cmd.ExecuteNonQuery();
             }
 
