@@ -6,7 +6,7 @@ I will run this on a Azure vm machine, and set up a check  which checks the id o
 therefore making it faster.
 
 ## Data Analysis
-I will implement a some filtering and checking after I have the data.
+I will implement some filtering and checking after I have the data.
  - (Classification problem) Based on the car's description filter out all the covert car dealership who doesn't pay a subscription fee, instead they put up these ads as their own cars. 
  - (Compressing/Comparing pictures) See if someone uses the same picture for multiple cars either at once, or in different times (this will come in handy in another project*)
  
