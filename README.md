@@ -7,9 +7,9 @@ therefore making it faster.
 
 ## Data Analysis
 I will implement some filtering and checking after I have the data.
- - (Classification problem) Based on the car's description filter out all the covert car dealership who doesn't pay a subscription fee, instead they put up these ads as their own cars. 
+ - (Classification problem) Based on the car's description filter out all the covert car dealership who doesn't pay a subscription fee, instead they put up these ads as their own cars. (these people make hasznaltauto.hu lose money)
  - (Compressing/Comparing pictures) See if someone uses the same picture for multiple cars either at once, or in different times (this will come in handy in another project*)
  
  
- *On ingatlan.com there are lazy real-estate agents who use the same pictures for multiple property. This is dominant in case of searching for a 'telek' (plot of land).
+ *On ingatlan.com there are lazy real-estate agents who use the same pictures for multiple property. This is dominant in case of searching for a 'telek' (plot of land). The problem with is is when people are looking for a property there is an option to filter out all the ads that don't have pictures. These lazy agents get away with not putting up a pictures and still showing up in the search results.
 
