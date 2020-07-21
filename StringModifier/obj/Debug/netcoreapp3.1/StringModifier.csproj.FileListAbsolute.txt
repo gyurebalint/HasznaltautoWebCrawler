@@ -9,3 +9,5 @@ C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\StringModifier\obj\Debu
 C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\StringModifier\obj\Debug\netcoreapp3.1\StringModifier.AssemblyInfo.cs
 C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\StringModifier\obj\Debug\netcoreapp3.1\StringModifier.dll
 C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\StringModifier\obj\Debug\netcoreapp3.1\StringModifier.pdb
+C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\StringModifier\obj\Debug\netcoreapp3.1\StringModifier.csproj.CoreCompileInputs.cache
+C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\StringModifier\obj\Debug\netcoreapp3.1\StringModifier.genruntimeconfig.cache

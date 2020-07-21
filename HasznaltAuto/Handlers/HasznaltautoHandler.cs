@@ -9,15 +9,15 @@ namespace HasznaltAuto.Handlers
 {
     class HasznaltautoHandler:DbHandler
     {
-        private void CheckErrors(Hasznaltauto hasznaltAuto)
+        private void CheckErrors(Hasznaltautok hasznaltAuto)
         {
             string errors = "";
 
         }
-        public void SetHasznaltautoWithCheckErrors(Hasznaltauto hasznaltAuto)
+        public void SetHasznaltautoWithCheckErrors(Hasznaltautok hasznaltAuto)
         {
-            CheckErrors(hasznaltAuto);
-            SetHasznaltauto(hasznaltAuto);
+            //CheckErrors(hasznaltAuto);
+            //SetHasznaltauto(hasznaltAuto);
         }
         public void ConvertRawDataToHasznaltauto()
         {

@@ -8,6 +8,7 @@ using OpenQA.Selenium.Support.UI;
 using HtmlAgilityPack;
 using System.Threading;
 using HasznaltAuto.Handlers;
+using System.Linq;
 
 namespace HasznaltAuto
 {
@@ -15,6 +16,8 @@ namespace HasznaltAuto
     {
         static void Main(string[] args)
         {
+            IWebDriver driver = new ChromeDriver();
+
             string autoGyarto = "";
             string autoTipus = "";
             /*
@@ -30,7 +33,7 @@ namespace HasznaltAuto
             HasznaltautoHandler hh = new HasznaltautoHandler();
 
 
-            IWebDriver driver = new ChromeDriver();
+
             driver.Url = "https://www.hasznaltauto.hu/";
 
             #region Maximize & Click Cookie
@@ -66,20 +69,12 @@ namespace HasznaltAuto
 
                 for (int l = 1; l < numberOfCarTypes; l++)
                 {
-                    if (l%2==0)
-                    {
-                        Thread.Sleep(250);
-                    }
-                    else
-                    {
-                        Thread.Sleep(100);
-                    }
-
+                    Thread.Sleep(250);
                     IWebElement carBrandNOTstaleagain = driver.FindElement(By.Id("hirdetesszemelyautosearch-marka_id"));
                     SelectElement carBrandSelectorNOTstaleagain = new SelectElement(carBrandNOTstaleagain);
                     carBrandSelectorNOTstaleagain.SelectByIndex(i);
                     driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(750);
 
                     IWebElement carTypeNOTstale = driver.FindElement(By.Id("hirdetesszemelyautosearch-modell_id"));
                     SelectElement carTypeSelectorNOTstale = new SelectElement(carTypeNOTstale);
@@ -91,21 +86,16 @@ namespace HasznaltAuto
                     btnKereses.Click();
 
                     int maximumNumberOfPages = 1;
-
+                    bool pagination = IsPaginationPresent(driver, By.ClassName("pagination"));
+                    if (pagination)
+                    {
+                        maximumNumberOfPages = Convert.ToInt32(driver.FindElement(By.XPath(@"//li[@class='last']/a")).Text);
+                    }
                     int k = 0;
                     do
                     {
-                        Thread.Sleep(100);
-
                         ReadOnlyCollection<IWebElement> listOfCarsInOnePage = driver.FindElements(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener"));
                         int numberOfCarsInOnePage = listOfCarsInOnePage.Count;
-
-                        if (numberOfCarsInOnePage >= 20)
-                        {
-                            //var maximumNumberOfPageselement = driver.FindElement(By.XPath(@"//li[@class='last']/a")).Text;
-                            maximumNumberOfPages = Convert.ToInt32(driver.FindElement(By.XPath(@"//li[@class='last']/a")).Text);
-                        }
-
                         #region Car page
                         for (int j = 0; j < numberOfCarsInOnePage; j++)
                         {
@@ -114,27 +104,44 @@ namespace HasznaltAuto
 
                             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
                             ReadOnlyCollection<IWebElement> listOfCarsInOnePageNOTstale = driver.FindElements(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener"));
+                            //.col-sm-19.cim-kontener
 
-                            IWebElement onecarFromList = listOfCarsInOnePageNOTstale[j].FindElement(By.XPath(".//h3"));
-                            var linkText = onecarFromList.Text;
-                            var carCardLink = onecarFromList.FindElement(By.LinkText(linkText));
-                            carCardLink.Click();
-                            #region Instantiating HasznaltAuto
-                            HasznaltautoAdapter hasznaltautoAdapter = new HasznaltautoAdapter(driver.Url, autoGyarto, autoTipus);
+                            IWebElement onecarFromList = listOfCarsInOnePageNOTstale[j].FindElement(By.TagName("h3"));
+                            //(@"//div[@class='row talalati-sor swipe-watch kiemelt']//h3"));
+                            IWebElement carCardLink = onecarFromList.FindElement(By.TagName("a"));
+                            var carLink = carCardLink.GetAttribute("href");
 
-                            try
+                            string[] hirdetesLink = carLink.Split('-');
+                            string hirdetesKod = hirdetesLink[hirdetesLink.Length - 1];
+
+                            /*
+                             * I have the text of the link of a specific car
+                             * If the 'hirdeteskod' on the car card doesn't exist in my database, navigate to the above said link
+                            // */
+
+                            using (HasznaltautoContext hnc = new HasznaltautoContext())
                             {
-                                Hasznaltauto hasznaltAuto = hasznaltautoAdapter.CreateHasznaltauto();
-                                hh.SetHasznaltautoWithCheckErrors(hasznaltAuto);
+                                var doesAutoAlreadyExistInDataBase = hnc.Hasznaltauto.Where<Hasznaltauto>(p => p.Hirdeteskod == hirdetesKod).Any();
+                                if (!doesAutoAlreadyExistInDataBase)
+                                {
+                                    Console.WriteLine($"Uj autot találtam: Ezzel a hirdetéskoddal: {hirdetesKod}");
+                                    //carCardLink.Click();
+                                    #region Instantiating HasznaltAuto
+                                    HasznaltautoAdapter hasznaltautoAdapter = new HasznaltautoAdapter(carLink, autoGyarto, autoTipus);
+                                    try
+                                    {
+                                        Hasznaltauto hasznaltAuto = hasznaltautoAdapter.CreateHasznaltauto();
+                                        hnc.Hasznaltauto.Add(hasznaltAuto);
+                                        hnc.SaveChanges();
+                                    }
+                                    catch (ArgumentException ex)
+                                    {
+                                        Console.WriteLine(ex.Message);
+                                    }
+                                }
+                                #endregion
                             }
-                            catch (ArgumentException ex)
-                            {
-                                Console.WriteLine(ex.Message);
-                            }
-
-                            #endregion
-
-                            driver.Navigate().Back();
+                            //driver.Navigate().Back();
                         }
                         k++;
                         //Click on the next page button
@@ -147,12 +154,24 @@ namespace HasznaltAuto
 
                         #endregion
                     } while (k < maximumNumberOfPages);
-
                     driver.FindElement(By.CssSelector(".navbar-brand.navbar-brand-hza")).Click();
-
                 }
             }
             #endregion
+        }
+
+        static private bool IsPaginationPresent(IWebDriver driver, By by)
+        {
+            try
+            {
+                driver.FindElement(by);
+                return true;
+            }
+            catch (NoSuchElementException)
+            {
+
+                return false;
+            }
         }
 
     }

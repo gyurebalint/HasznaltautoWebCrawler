@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Org.BouncyCastle.Math.Field;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -278,12 +279,21 @@ namespace HasznaltAuto.Models
         {
             string autoGyarto = this.rawAutoGyarto;
             string autoTipus = this.rawAutoTipus;
+
             string hirdeteskod = this.rawHirdeteskod;
 
             int vetelAr = 0;
             if (!string.IsNullOrEmpty(this.rawVetelAr))
             {
-                vetelAr = Int32.Parse(Regex.Replace(this.rawVetelAr, "[^0-9]", ""));
+                try
+                {
+                    vetelAr = Int32.Parse(Regex.Replace(this.rawVetelAr, "[^0-9]", ""));
+                }
+                catch (ArgumentException)
+                { 
+                    vetelAr = 0;
+                }
+
             }
 
             int vetelArEUR = 0;
@@ -309,8 +319,16 @@ namespace HasznaltAuto.Models
 
             }
 
-            string allapot = this.rawAllapot;
-            string kivitel = this.rawKivitel;
+            string allapot = "-";
+            if (!string.IsNullOrEmpty(this.rawAllapot))
+            {
+                allapot = this.rawAllapot;
+            }
+            string kivitel = "-";
+            if (!string.IsNullOrEmpty(this.rawKivitel))
+            {
+                kivitel = this.rawKivitel;
+            }
 
             int KmOraAllasa = 0;
             if (!string.IsNullOrEmpty(this.rawKmAllas))
@@ -330,7 +348,11 @@ namespace HasznaltAuto.Models
                 ajtokSzama = Int32.Parse(Regex.Replace(this.rawAjtokSzama, "[^0-9]", ""));
             }
 
-            string szin = this.rawSzin;
+            string szin = "-";
+            if (!string.IsNullOrEmpty(this.rawSzin))
+            {
+                szin = this.rawSzin;
+            }
 
             int tomeg = 0;
             if (!string.IsNullOrEmpty(this.rawTomeg))
@@ -350,8 +372,16 @@ namespace HasznaltAuto.Models
 
             }
 
-            string klimaFajta = this.rawKlima;
-            string uzemanyag = this.rawUzemanyag;
+            string klimaFajta = "-";
+            if (!string.IsNullOrEmpty(this.rawKlima))
+            {
+                klimaFajta = this.rawKlima;
+            }
+            string uzemanyag = "-";
+            if (!string.IsNullOrEmpty(this.rawUzemanyag))
+            {
+                uzemanyag = this.rawUzemanyag;
+            }
 
             int hengerurtartalom = 0;
             if (!string.IsNullOrEmpty(this.rawHengerurtartalom))
@@ -368,9 +398,23 @@ namespace HasznaltAuto.Models
                 TeljLe = Int32.Parse(Regex.Replace(teljesitmeny[1], "[^0-9]", ""));
             }
 
-            string hajtas = this.rawHajtas;
-            string sebValtofajta = this.rawSebValtofajta;
-            string okmanyok = this.rawOkmanyokJellege;
+            string hajtas = "-";
+            if (!string.IsNullOrEmpty(this.rawHajtas))
+            {
+                hajtas = this.rawHajtas;
+            }
+
+            string sebValtofajta = "-";
+            if (!string.IsNullOrEmpty(this.rawSebValtofajta))
+            {
+                sebValtofajta = rawSebValtofajta;
+            }
+
+            string okmanyok = "-";
+            if (!string.IsNullOrEmpty(this.rawOkmanyokJellege))
+            {
+                okmanyok = this.rawOkmanyokJellege;
+            }
 
             int muszakiVizsgaEv = 1900;
             int muszakiVizsgaHonap = 0;
@@ -383,18 +427,65 @@ namespace HasznaltAuto.Models
                     muszakiVizsgaHonap = Int32.Parse(muszakiVizsgaArr[1]);
                 }
             }
+            string abroncsMeret = "-";
+            if (!string.IsNullOrEmpty(this.rawAbroncsMeret))
+            {
+                abroncsMeret = this.rawAbroncsMeret;
+            }
 
+            string link = "-";
+            if (!string.IsNullOrEmpty(this.rawLink))
+            {
+                link = this.rawLink;
+            }
 
-            string abroncsMeret = this.rawAbroncsMeret;
-            string link = this.rawLink;
-            string leiras = this.rawLeiras;
+            string leiras = "-";
+            if (!string.IsNullOrEmpty(this.rawLeiras))
+            {
+                leiras = this.rawLeiras;
+            }
             bool isKereskedo = rawIsKereskedo;
 
-            Hasznaltauto hasznaltAuto = new Hasznaltauto(autoGyarto, autoTipus, hirdeteskod, vetelAr, vetelArEUR, evjaratEv,
+            Hasznaltauto hasznaltAuto = new Hasznaltauto();
+            /*autoGyarto, autoTipus, hirdeteskod, vetelAr, vetelArEUR, evjaratEv,
                 evjaratHonap, allapot, kivitel, KmOraAllasa, szemelyekSzama, ajtokSzama, szin, tomeg, teljesTomeg, csomagtartoMeret,
                 klimaFajta, uzemanyag, hengerurtartalom, TeljkW, TeljLe, hajtas, sebValtofajta, okmanyok, muszakiVizsgaEv,
-                muszakiVizsgaHonap, abroncsMeret, link, leiras, isKereskedo);
+                muszakiVizsgaHonap, abroncsMeret, link, leiras, isKereskedo);*/
+            hasznaltAuto.AutoGyarto = autoGyarto;
+            hasznaltAuto.AutoTipus = autoTipus;
+            hasznaltAuto.Hirdeteskod = hirdeteskod;
+            hasznaltAuto.VetelarHuf = vetelAr;
+            hasznaltAuto.VetelarEur = vetelArEUR;
+            hasznaltAuto.EvjaratEv = evjaratEv;
+            hasznaltAuto.EvjaratHonap = evjaratHonap;
+            hasznaltAuto.Allapot = allapot;
+            hasznaltAuto.Kivitel = kivitel;
+            hasznaltAuto.KmAllas = KmOraAllasa;
+            hasznaltAuto.SzemelyekSzama = szemelyekSzama;
+            hasznaltAuto.AjtokSzama = ajtokSzama;
+            hasznaltAuto.Szin = szin;
+            hasznaltAuto.Tomeg = tomeg;
+            hasznaltAuto.TeljesTomeg = teljesTomeg;
+            hasznaltAuto.CsomagtartoMeret = csomagtartoMeret;
+            hasznaltAuto.KlimaFajta = klimaFajta;
+            hasznaltAuto.Uzemanyag = uzemanyag;
+            hasznaltAuto.Hengerurtartalom = hengerurtartalom;
+            hasznaltAuto.TeljesitmenyKw = TeljkW;
+            hasznaltAuto.TeljesitmenyLe = TeljLe;
+            hasznaltAuto.Hajtas = hajtas;
+            hasznaltAuto.Sebessegvalto = sebValtofajta;
+            hasznaltAuto.Okmanyok = okmanyok;
+            hasznaltAuto.MuszakiVizsgaEv = muszakiVizsgaEv;
+            hasznaltAuto.MuszakivizsgaHonap = muszakiVizsgaHonap;
+            hasznaltAuto.AbroncsMeret = abroncsMeret;
+            hasznaltAuto.Link = link;
+            hasznaltAuto.Leiras = leiras;
+            hasznaltAuto.IsKereskedo = isKereskedo;
 
+            /* autoGyarto, autoTipus, hirdeteskod, vetelAr, vetelArEUR, evjaratEv,
+                evjaratHonap, allapot, kivitel, KmOraAllasa, szemelyekSzama, ajtokSzama, szin, tomeg, teljesTomeg, csomagtartoMeret,
+                klimaFajta, uzemanyag, hengerurtartalom, TeljkW, TeljLe, hajtas, sebValtofajta, okmanyok, muszakiVizsgaEv,
+                muszakiVizsgaHonap, abroncsMeret, link, leiras, isKereskedo);*/
             return hasznaltAuto;
         }
     }
