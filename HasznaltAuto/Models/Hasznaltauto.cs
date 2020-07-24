@@ -7,6 +7,11 @@ namespace HasznaltAuto.Models
 {
     public partial class Hasznaltauto
     {
+        public Hasznaltauto()
+        {
+            Kepek = new HashSet<Kepek>();
+        }
+
         [Key]
         [Column("HasznaltautoID")]
         public int HasznaltautoId { get; set; }
@@ -45,11 +50,9 @@ namespace HasznaltAuto.Models
         public string AbroncsMeret { get; set; }
         public string Link { get; set; }
         public string Leiras { get; set; }
-        [Column("isKereskedo")]
         public bool? IsKereskedo { get; set; }
-        public Hasznaltauto()
-        {
 
-        }
+        [InverseProperty("Hasznaltauto")]
+        public virtual ICollection<Kepek> Kepek { get; set; }
     }
 }

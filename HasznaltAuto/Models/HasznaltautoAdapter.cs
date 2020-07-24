@@ -248,32 +248,32 @@ namespace HasznaltAuto.Models
             rawLink = carData[25];
             rawLeiras = carData[26];
 
-            //foreach (var item in carData)
-            //{
-            //    Console.WriteLine(item);
-            //}
+            foreach (var item in carData)
+            {
+                Console.WriteLine(item);
+            }
 
-            //Console.WriteLine(this.rawVetelAr);
-            //Console.WriteLine(this.rawVetelArEUR);
-            //Console.WriteLine(rawEvjarat);
-            //Console.WriteLine(rawAllapot);
-            //Console.WriteLine(rawKivitel);
-            //Console.WriteLine(rawKmAllas);
-            //Console.WriteLine(rawSzemelyekSzama);
-            //Console.WriteLine(rawAjtokSzama);
-            //Console.WriteLine(rawSzin);
-            //Console.WriteLine(rawTomeg);
-            //Console.WriteLine(rawTeljesTomeg);
-            //Console.WriteLine(rawCsomagtartoMeret);
-            //Console.WriteLine(rawKlima);
-            //Console.WriteLine(rawTeto);
-            //Console.WriteLine(rawUzemanyag);
-            //Console.WriteLine(rawHengerurtartalom);
-            //Console.WriteLine(rawTeljesitmeny);
-            //Console.WriteLine(rawHajtas);
-            //Console.WriteLine(rawSebValtofajta);
-            //Console.WriteLine(rawOkmanyokJellege);
-            //Console.WriteLine(rawMuszakiVizsgaErvenyes);
+            Console.WriteLine(this.rawVetelAr);
+            Console.WriteLine(this.rawVetelArEUR);
+            Console.WriteLine(rawEvjarat);
+            Console.WriteLine(rawAllapot);
+            Console.WriteLine(rawKivitel);
+            Console.WriteLine(rawKmAllas);
+            Console.WriteLine(rawSzemelyekSzama);
+            Console.WriteLine(rawAjtokSzama);
+            Console.WriteLine(rawSzin);
+            Console.WriteLine(rawTomeg);
+            Console.WriteLine(rawTeljesTomeg);
+            Console.WriteLine(rawCsomagtartoMeret);
+            Console.WriteLine(rawKlima);
+            Console.WriteLine(rawTeto);
+            Console.WriteLine(rawUzemanyag);
+            Console.WriteLine(rawHengerurtartalom);
+            Console.WriteLine(rawTeljesitmeny);
+            Console.WriteLine(rawHajtas);
+            Console.WriteLine(rawSebValtofajta);
+            Console.WriteLine(rawOkmanyokJellege);
+            Console.WriteLine(rawMuszakiVizsgaErvenyes);
         }
         public Hasznaltauto CreateHasznaltauto()
         {
@@ -290,7 +290,7 @@ namespace HasznaltAuto.Models
                     vetelAr = Int32.Parse(Regex.Replace(this.rawVetelAr, "[^0-9]", ""));
                 }
                 catch (ArgumentException)
-                { 
+                {
                     vetelAr = 0;
                 }
 

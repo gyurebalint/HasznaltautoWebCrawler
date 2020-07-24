@@ -9,6 +9,9 @@ using HtmlAgilityPack;
 using System.Threading;
 using HasznaltAuto.Handlers;
 using System.Linq;
+using System.Net;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace HasznaltAuto
 {
@@ -17,7 +20,9 @@ namespace HasznaltAuto
         static void Main(string[] args)
         {
             IWebDriver driver = new ChromeDriver();
-
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(0));
+            WebClient wc = new WebClient();
+            HtmlWeb web = new HtmlWeb();
             string autoGyarto = "";
             string autoTipus = "";
             /*
@@ -43,7 +48,7 @@ namespace HasznaltAuto
             cookieOK.Click();
             #endregion
 
-            Thread.Sleep(100);
+            Thread.Sleep(250);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             #region Main page, select a car brand
@@ -55,7 +60,7 @@ namespace HasznaltAuto
             #region Going through each brand 1 by 1
             for (int i = 1; i < 7; i++) //numberOfCarBrands
             {
-                Thread.Sleep(100);
+                Thread.Sleep(250);
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
                 IWebElement carBrandNOTstale = driver.FindElement(By.Id("hirdetesszemelyautosearch-marka_id"));
@@ -78,8 +83,12 @@ namespace HasznaltAuto
 
                     IWebElement carTypeNOTstale = driver.FindElement(By.Id("hirdetesszemelyautosearch-modell_id"));
                     SelectElement carTypeSelectorNOTstale = new SelectElement(carTypeNOTstale);
+                    wait.Until(driver => carTypeSelectorNOTstale.Options.Count > 1);
+
                     carTypeSelectorNOTstale.SelectByIndex(l);
                     autoTipus = carTypeSelectorNOTstale.SelectedOption.Text;
+
+                    Thread.Sleep(450);
 
                     IWebElement btnKereses = driver.FindElement(By.Name("submitKereses"));
                     btnKereses.SendKeys(Keys.Control + "t");
@@ -94,15 +103,15 @@ namespace HasznaltAuto
                     int k = 0;
                     do
                     {
-                        ReadOnlyCollection<IWebElement> listOfCarsInOnePage = driver.FindElements(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener"));
-                        int numberOfCarsInOnePage = listOfCarsInOnePage.Count;
+                        wait.Until(driver => driver.FindElement(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener")).Displayed);
+                        int numberOfCarsInOnePage = driver.FindElements(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener")).Count;
                         #region Car page
                         for (int j = 0; j < numberOfCarsInOnePage; j++)
                         {
                             Thread.Sleep(250);
                             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
-                            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+                            wait.Until(driver => driver.FindElement(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener")).Displayed);
                             ReadOnlyCollection<IWebElement> listOfCarsInOnePageNOTstale = driver.FindElements(By.CssSelector(@".col-xs-28.col-sm-19.cim-kontener"));
                             //.col-sm-19.cim-kontener
 
@@ -111,13 +120,14 @@ namespace HasznaltAuto
                             IWebElement carCardLink = onecarFromList.FindElement(By.TagName("a"));
                             var carLink = carCardLink.GetAttribute("href");
 
+
                             string[] hirdetesLink = carLink.Split('-');
                             string hirdetesKod = hirdetesLink[hirdetesLink.Length - 1];
 
                             /*
                              * I have the text of the link of a specific car
                              * If the 'hirdeteskod' on the car card doesn't exist in my database, navigate to the above said link
-                            // */
+                             */
 
                             using (HasznaltautoContext hnc = new HasznaltautoContext())
                             {
@@ -125,14 +135,62 @@ namespace HasznaltAuto
                                 if (!doesAutoAlreadyExistInDataBase)
                                 {
                                     Console.WriteLine($"Uj autot találtam: Ezzel a hirdetéskoddal: {hirdetesKod}");
-                                    //carCardLink.Click();
+                                    carCardLink.Click();
                                     #region Instantiating HasznaltAuto
                                     HasznaltautoAdapter hasznaltautoAdapter = new HasznaltautoAdapter(carLink, autoGyarto, autoTipus);
                                     try
                                     {
                                         Hasznaltauto hasznaltAuto = hasznaltautoAdapter.CreateHasznaltauto();
                                         hnc.Hasznaltauto.Add(hasznaltAuto);
+
+                                        int numberOfImages = Int32.Parse(driver.FindElement(By.ClassName("hirdetes-kepek")).Text);
+                                        //Int32.Parse(NodeFromPage(carLink, @"//a[@class='hirdetes-kepek']").InnerText);
+
+                                        //string firstImagesURIString = NodeFromPage(carLink, @"//div[@class='adatlap-kepek-placeholder']/img").GetAttributeValue("src", "-")
+                                        //string URI = URIOfImage(firstImagesURIString, z);
+
+                                        Console.WriteLine(numberOfImages);
+                                        if (numberOfImages != 0)
+                                        {
+                                            var links = from b in driver.FindElements(By.TagName("a"))       //driver.FindElements(By.XPath(@"//div[@class='slide']"))
+                                                        where b.GetAttribute("data-size") == "640x480"  //("data-index") == z.ToString()
+                                                        select (string)b.GetAttribute("href");
+
+                                            //Console.WriteLine(firstImagesURIString);
+                                            for (int z = 0; z < numberOfImages; z++)
+                                            {
+                                                //var linkOfFirstImage = driver.FindElement(By.Id("kepek-holder")).FindElement(By.TagName("figure")).FindElement(By.TagName("a"));
+                                                //var link = linkOfFirstImage.GetAttribute("href");
+                                                //if (linkOfFirstImage.Displayed)
+                                                //{
+                                                //    linkOfFirstImage.Click();
+                                                //}
+
+                                                //IEnumerable<string> enumOfImageURI = from b in driver.FindElements(By.TagName("a"))       //driver.FindElements(By.XPath(@"//div[@class='slide']"))
+                                                //                                     where b.GetAttribute("data-size") == "640x480"  //("data-index") == z.ToString()
+                                                //                                     select (string)b.GetAttribute("href");
+                                                //var bla = driver.FindElement(By.Id("kepek-holder")).FindElements(By.TagName("figure"));
+
+                                                List<string> listOfImageURI = links.ToList();
+                                                if (listOfImageURI.Any())
+                                                {
+                                                    string imageURI = listOfImageURI[z];
+                                                    Console.WriteLine(imageURI);
+                                                    Kepek kep = new Kepek();
+                                                    kep.Hasznaltauto = hasznaltAuto;
+                                                    kep.HasznaltautoId = hasznaltAuto.HasznaltautoId;
+                                                    kep.Hirdeteskod = hasznaltAuto.Hirdeteskod;
+                                                    kep.Img = wc.DownloadData(imageURI);
+
+                                                    hnc.Kepek.Add(kep);
+                                                    hnc.SaveChanges();
+
+
+                                                }
+                                            }
+                                        }
                                         hnc.SaveChanges();
+                                        driver.Navigate().Back();
                                     }
                                     catch (ArgumentException ex)
                                     {
@@ -141,7 +199,7 @@ namespace HasznaltAuto
                                 }
                                 #endregion
                             }
-                            //driver.Navigate().Back();
+                            
                         }
                         k++;
                         //Click on the next page button
@@ -151,7 +209,6 @@ namespace HasznaltAuto
                             var page = driver.FindElement(By.CssSelector(@".lapozoNyilJobb.haicon-uj-jnyil-kicsi"));
                             page.Click();
                         }
-
                         #endregion
                     } while (k < maximumNumberOfPages);
                     driver.FindElement(By.CssSelector(".navbar-brand.navbar-brand-hza")).Click();
@@ -159,7 +216,6 @@ namespace HasznaltAuto
             }
             #endregion
         }
-
         static private bool IsPaginationPresent(IWebDriver driver, By by)
         {
             try
@@ -169,11 +225,19 @@ namespace HasznaltAuto
             }
             catch (NoSuchElementException)
             {
-
                 return false;
             }
         }
 
+        static private HtmlNode NodeFromPage(string url, string nodeString)
+        {
+            HtmlWeb web = new HtmlWeb();
+            var htmlDoc = web.Load(url);
+            //List<string> carData = new List<string>();
+            var nodeFromPage = htmlDoc.DocumentNode.SelectSingleNode(nodeString);
+
+            return nodeFromPage;
+        }
     }
 }
 

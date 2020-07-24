@@ -16,13 +16,14 @@ namespace HasznaltAuto.Models
         }
 
         public virtual DbSet<Hasznaltauto> Hasznaltauto { get; set; }
+        public virtual DbSet<Kepek> Kepek { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=tcp:gyurebalint-personalprojects.database.windows.net,1433;Initial Catalog=Hasznaltautok;Persist Security Info=False;User ID=gyurebalint;Password=sherLOCKED1234;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer("Data Source=gyurebalint-personalprojects.database.windows.net;Initial Catalog=Hasznaltautok;User ID=gyurebalint;Password=sherLOCKED1234;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
         }
 
@@ -59,6 +60,21 @@ namespace HasznaltAuto.Models
                 entity.Property(e => e.Szin).IsUnicode(false);
 
                 entity.Property(e => e.Uzemanyag).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Kepek>(entity =>
+            {
+                entity.HasKey(e => e.ImagesId)
+                    .HasName("PK__Kepek__0E2E80DF52146487");
+
+                entity.Property(e => e.Hash).IsUnicode(false);
+
+                entity.Property(e => e.Hirdeteskod).IsUnicode(false);
+
+                entity.HasOne(d => d.Hasznaltauto)
+                    .WithMany(p => p.Kepek)
+                    .HasForeignKey(d => d.HasznaltautoId)
+                    .HasConstraintName("FK__Kepek__Hasznalta__73BA3083");
             });
 
             OnModelCreatingPartial(modelBuilder);
