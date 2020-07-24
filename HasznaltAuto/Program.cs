@@ -120,7 +120,6 @@ namespace HasznaltAuto
                             IWebElement carCardLink = onecarFromList.FindElement(By.TagName("a"));
                             var carLink = carCardLink.GetAttribute("href");
 
-
                             string[] hirdetesLink = carLink.Split('-');
                             string hirdetesKod = hirdetesLink[hirdetesLink.Length - 1];
 
@@ -144,11 +143,6 @@ namespace HasznaltAuto
                                         hnc.Hasznaltauto.Add(hasznaltAuto);
 
                                         int numberOfImages = Int32.Parse(driver.FindElement(By.ClassName("hirdetes-kepek")).Text);
-                                        //Int32.Parse(NodeFromPage(carLink, @"//a[@class='hirdetes-kepek']").InnerText);
-
-                                        //string firstImagesURIString = NodeFromPage(carLink, @"//div[@class='adatlap-kepek-placeholder']/img").GetAttributeValue("src", "-")
-                                        //string URI = URIOfImage(firstImagesURIString, z);
-
                                         Console.WriteLine(numberOfImages);
                                         if (numberOfImages != 0)
                                         {
@@ -159,18 +153,6 @@ namespace HasznaltAuto
                                             //Console.WriteLine(firstImagesURIString);
                                             for (int z = 0; z < numberOfImages; z++)
                                             {
-                                                //var linkOfFirstImage = driver.FindElement(By.Id("kepek-holder")).FindElement(By.TagName("figure")).FindElement(By.TagName("a"));
-                                                //var link = linkOfFirstImage.GetAttribute("href");
-                                                //if (linkOfFirstImage.Displayed)
-                                                //{
-                                                //    linkOfFirstImage.Click();
-                                                //}
-
-                                                //IEnumerable<string> enumOfImageURI = from b in driver.FindElements(By.TagName("a"))       //driver.FindElements(By.XPath(@"//div[@class='slide']"))
-                                                //                                     where b.GetAttribute("data-size") == "640x480"  //("data-index") == z.ToString()
-                                                //                                     select (string)b.GetAttribute("href");
-                                                //var bla = driver.FindElement(By.Id("kepek-holder")).FindElements(By.TagName("figure"));
-
                                                 List<string> listOfImageURI = links.ToList();
                                                 if (listOfImageURI.Any())
                                                 {
@@ -184,8 +166,6 @@ namespace HasznaltAuto
 
                                                     hnc.Kepek.Add(kep);
                                                     hnc.SaveChanges();
-
-
                                                 }
                                             }
                                         }
@@ -199,7 +179,6 @@ namespace HasznaltAuto
                                 }
                                 #endregion
                             }
-                            
                         }
                         k++;
                         //Click on the next page button
@@ -228,7 +207,6 @@ namespace HasznaltAuto
                 return false;
             }
         }
-
         static private HtmlNode NodeFromPage(string url, string nodeString)
         {
             HtmlWeb web = new HtmlWeb();
