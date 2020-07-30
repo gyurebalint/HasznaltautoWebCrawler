@@ -23,6 +23,9 @@ namespace HasznaltAuto
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(0));
             WebClient wc = new WebClient();
             HtmlWeb web = new HtmlWeb();
+            int allPicsNumber = 0;
+            int allCarsNumber = 0;
+
             string autoGyarto = "";
             string autoTipus = "";
             /*
@@ -140,6 +143,8 @@ namespace HasznaltAuto
                                     try
                                     {
                                         Hasznaltauto hasznaltAuto = hasznaltautoAdapter.CreateHasznaltauto();
+                                        allCarsNumber++;
+                                        Console.WriteLine($"Number of CARS added so far: {allCarsNumber}");
                                         hnc.Hasznaltauto.Add(hasznaltAuto);
 
                                         int numberOfImages = Int32.Parse(driver.FindElement(By.ClassName("hirdetes-kepek")).Text);
@@ -162,8 +167,10 @@ namespace HasznaltAuto
                                                     kep.Hasznaltauto = hasznaltAuto;
                                                     kep.HasznaltautoId = hasznaltAuto.HasznaltautoId;
                                                     kep.Hirdeteskod = hasznaltAuto.Hirdeteskod;
-                                                    kep.Img = wc.DownloadData(imageURI);
+                                                    kep.Img = imageURI;
 
+                                                    allPicsNumber++;
+                                                    Console.WriteLine($"Number of pictures added so far: {allPicsNumber}");
                                                     hnc.Kepek.Add(kep);
                                                     hnc.SaveChanges();
                                                 }

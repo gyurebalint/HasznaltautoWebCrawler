@@ -13,16 +13,11 @@ namespace HasznaltAuto.Models
         [Column("HasznaltautoID")]
         public int? HasznaltautoId { get; set; }
         public string Hirdeteskod { get; set; }
-        public byte[] Img { get; set; }
+        public string Img { get; set; }
         public string Hash { get; set; }
 
         [ForeignKey(nameof(HasznaltautoId))]
         [InverseProperty("Kepek")]
         public virtual Hasznaltauto Hasznaltauto { get; set; }
-
-        public Kepek()
-        {
-
-        }
     }
 }
