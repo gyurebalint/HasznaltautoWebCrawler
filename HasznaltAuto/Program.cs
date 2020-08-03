@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Threading.Tasks;
 
 namespace HasznaltAuto
 {
@@ -149,30 +150,25 @@ namespace HasznaltAuto
 
                                         int numberOfImages = Int32.Parse(driver.FindElement(By.ClassName("hirdetes-kepek")).Text);
                                         Console.WriteLine(numberOfImages);
+
+                                        //HAS TO BE ASNYC OR THREADED
+                                        //allPicsNumber = UploadImagesToDatabase(numberOfImages, driver, hasznaltAuto, allPicsNumber, hnc);
+
                                         if (numberOfImages != 0)
                                         {
                                             var links = from b in driver.FindElements(By.TagName("a"))       //driver.FindElements(By.XPath(@"//div[@class='slide']"))
                                                         where b.GetAttribute("data-size") == "640x480"  //("data-index") == z.ToString()
                                                         select (string)b.GetAttribute("href");
 
-                                            //Console.WriteLine(firstImagesURIString);
-                                            for (int z = 0; z < numberOfImages; z++)
+                                            List<string> listOfImageURI = links.ToList();
+                                            if (listOfImageURI.Any())
                                             {
-                                                List<string> listOfImageURI = links.ToList();
-                                                if (listOfImageURI.Any())
+                                                ////Console.WriteLine(firstImagesURIString);
+                                                for (int z = 0; z < numberOfImages; z++)
                                                 {
-                                                    string imageURI = listOfImageURI[z];
-                                                    Console.WriteLine(imageURI);
                                                     Kepek kep = new Kepek();
-                                                    kep.Hasznaltauto = hasznaltAuto;
-                                                    kep.HasznaltautoId = hasznaltAuto.HasznaltautoId;
-                                                    kep.Hirdeteskod = hasznaltAuto.Hirdeteskod;
-                                                    kep.Img = imageURI;
-
-                                                    allPicsNumber++;
-                                                    Console.WriteLine($"Number of pictures added so far: {allPicsNumber}");
-                                                    hnc.Kepek.Add(kep);
-                                                    hnc.SaveChanges();
+                                                    string imageURI = listOfImageURI[z];
+                                                    kep.SaveImageToDatabase(kep, hasznaltAuto, hnc, allPicsNumber, imageURI);
                                                 }
                                             }
                                         }
@@ -223,6 +219,17 @@ namespace HasznaltAuto
 
             return nodeFromPage;
         }
+        //    string imageURI = listOfImageURI[z];
+        //    Console.WriteLine(imageURI);
+        //    Kepek kep = new Kepek();
+        //    kep.Hasznaltauto = hasznaltAuto;
+        //    kep.HasznaltautoId = hasznaltAuto.HasznaltautoId;
+        //    kep.Hirdeteskod = hasznaltAuto.Hirdeteskod;
+        //    kep.Img = imageURI;
+
+        //    allPicsNumber++;
+        //    Console.WriteLine($"Number of pictures added so far: {allPicsNumber}");
+        //    hnc.Kepek.Add(kep);
+        //    hnc.SaveChanges();
     }
 }
-

@@ -76,6 +76,10 @@
             "Selenium.WebDriver.ChromeDriver": {
               "target": "Package",
               "version": "[83.0.4103.3900, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.7.0, )"
             }
           },
           "imports": [
