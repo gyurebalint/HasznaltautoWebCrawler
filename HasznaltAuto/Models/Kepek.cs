@@ -24,22 +24,23 @@ namespace HasznaltAuto.Models
         [InverseProperty("Kepek")]
         public virtual Hasznaltauto Hasznaltauto { get; set; }
 
-        public async void SaveImageToDatabase(Kepek kep, Hasznaltauto hasznaltAuto, HasznaltautoContext hnc, int allPicsNumber, string imageURI)
+        public async 
+        Task
+SaveImageToDatabase(Kepek kep, Hasznaltauto hasznaltAuto, int allPicsNumber, string imageURI, HasznaltautoContext hnc)
         {
+
             Console.WriteLine(imageURI);
             kep.Hasznaltauto = hasznaltAuto;
             kep.HasznaltautoId = hasznaltAuto.HasznaltautoId;
             kep.Hirdeteskod = hasznaltAuto.Hirdeteskod;
             kep.Img = imageURI;
-            kep.Hash = await GetHash(imageURI);
+            kep.Hash = await GetHashAsync(imageURI);
 
             allPicsNumber++;
-            Console.WriteLine($"Number of pictures added so far: {allPicsNumber}");
             hnc.Kepek.Add(kep);
             hnc.SaveChanges();
-
         }
-        private async Task<Bitmap> GetBitmap(string imageURI)
+        private async Task<Bitmap> GetBitmapAsync(string imageURI)
         {
             Bitmap bmpSource;
             using (WebClient wc = new WebClient())
@@ -51,9 +52,9 @@ namespace HasznaltAuto.Models
             }
             return bmpSource;
         }
-        private async Task<string> GetHash(string imageURI)
+        private async Task<string> GetHashAsync(string imageURI)
         {
-            Bitmap bmpSource = await GetBitmap(imageURI);
+            Bitmap bmpSource = await GetBitmapAsync(imageURI);
             string stringResult = "";
             List<bool> lResult = new List<bool>();
             //create new image with 16x16 pixel

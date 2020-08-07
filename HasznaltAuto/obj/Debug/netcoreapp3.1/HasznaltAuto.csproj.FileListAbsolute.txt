@@ -68,3 +68,4 @@ C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\HasznaltAuto\bin\Debug\
 C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\HasznaltAuto\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\HasznaltAuto\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
 C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\HasznaltAuto\bin\Debug\netcoreapp3.1\HasznaltAuto.dll.config
+C:\Users\Gyure Balint\Documents\MyOwn\Repos\HasznaltAuto\HasznaltAuto\obj\Debug\netcoreapp3.1\HasznaltAuto.csproj.CoreCompileInputs.cache

@@ -18,7 +18,7 @@ namespace HasznaltAuto
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             IWebDriver driver = new ChromeDriver();
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(0));
@@ -88,7 +88,7 @@ namespace HasznaltAuto
                     IWebElement carTypeNOTstale = driver.FindElement(By.Id("hirdetesszemelyautosearch-modell_id"));
                     SelectElement carTypeSelectorNOTstale = new SelectElement(carTypeNOTstale);
                     wait.Until(driver => carTypeSelectorNOTstale.Options.Count > 1);
-
+                    
                     carTypeSelectorNOTstale.SelectByIndex(l);
                     autoTipus = carTypeSelectorNOTstale.SelectedOption.Text;
 
@@ -145,6 +145,7 @@ namespace HasznaltAuto
                                     {
                                         Hasznaltauto hasznaltAuto = hasznaltautoAdapter.CreateHasznaltauto();
                                         allCarsNumber++;
+                                        hnc.SaveChanges();
                                         Console.WriteLine($"Number of CARS added so far: {allCarsNumber}");
                                         hnc.Hasznaltauto.Add(hasznaltAuto);
 
@@ -168,7 +169,22 @@ namespace HasznaltAuto
                                                 {
                                                     Kepek kep = new Kepek();
                                                     string imageURI = listOfImageURI[z];
-                                                    kep.SaveImageToDatabase(kep, hasznaltAuto, hnc, allPicsNumber, imageURI);
+
+                                                    //Trying out things
+                                                    //kep.Hasznaltauto = hasznaltAuto;
+                                                    //kep.HasznaltautoId = hasznaltAuto.HasznaltautoId;
+                                                    //kep.Hirdeteskod = hasznaltAuto.Hirdeteskod;
+                                                    //kep.Img = imageURI;
+                                                    ////kep.Hash = await GetHash(imageURI);
+
+                                                    //allPicsNumber++;
+                                                    //hnc.Kepek.Add(kep);
+                                                    //hnc.SaveChanges();
+                                                    //Trying out things
+
+                                                    await kep.SaveImageToDatabase(kep, hasznaltAuto, allPicsNumber, imageURI, hnc);
+                                                    Console.WriteLine($"Number of pictures added so far: {allPicsNumber}");
+                                                    allPicsNumber++;
                                                 }
                                             }
                                         }

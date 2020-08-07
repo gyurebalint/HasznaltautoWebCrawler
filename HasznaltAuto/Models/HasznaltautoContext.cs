@@ -24,7 +24,8 @@ namespace HasznaltAuto.Models
             if (!optionsBuilder.IsConfigured)
             {
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["Hasznaltauto"].ConnectionString);//"Data Source=gyurebalint-personalprojects.database.windows.net;Initial Catalog=Hasznaltautok;User ID=gyurebalint;Password=sherLOCKED1234;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["Hasznaltauto"].ConnectionString);
+                //"Data Source=gyurebalint-personalprojects.database.windows.net;Initial Catalog=Hasznaltautok;User ID=gyurebalint;Password=sherLOCKED1234;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
         }
 
