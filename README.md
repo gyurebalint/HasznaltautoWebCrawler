@@ -1,13 +1,8 @@
 # HasznaltautoWebCrawler - hasznaltauto.hu
 
-This is a web crawler which gets car data from Hungary's largest used car website(hasznaltauto.hu). This project is in progress, the algorithm for scraping is done and working, 
-the database and model is set up. The problem arose that with its current form it'll take about 16 hours to get all the data into the database. My workaround will be that
-I will run this on a Azure vm machine, and set up a check  which checks the id of the car advertisement, if it already exists, doesn't need to open that page,
-therefore making it faster.
+This is my first attempt to scrape data from a website. My intentions were to scrape used car data and its pictures, save it into a relational database. I used Selenium to do so, it isn't the fastest way...but at least I've gotten to know the Selenium library. It opens a Chrome browser and the algorithm takes us through just like we would manually and scrapes the needed data.
 
 ## Data Analysis
-I will implement some filtering and checking after I have the data.
- - (Classification problem) Based on the car's description filter out all the covert car dealership who doesn't pay a subscription fee, instead they put up these ads as their own cars. (these people make hasznaltauto.hu lose money)
  - (Compressing/Comparing pictures) See if someone uses the same picture for multiple cars either at once, or in different times (this will come in handy in another project*)
  
  
